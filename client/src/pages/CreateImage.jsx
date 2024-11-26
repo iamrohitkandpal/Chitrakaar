@@ -17,37 +17,42 @@ const CreateImage = () => {
   const [loading, setLoading] = useState(false);
 
   const generateImage = async () => {
-    if(form.prompt){
+    if (form.prompt) {
+      if (form.prompt.length > 1000) {
+        alert(
+          "Prompt is too long. Please shorten it to less than 1000 characters."
+        );
+        return;
+      }
+
       try {
-        console.log(form.prompt);
-        
         setGeneratingImage(true);
-        const response = await fetch('http://localhost:8080/api/v1/generation', {
-          method: 'POST',
+        const response = await fetch("http://localhost:8080/api/v1/generation", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            prompt: form.prompt,
-          }),
+          body: JSON.stringify({ prompt: form.prompt }),
         });
+        
 
         const data = await response.json();
-
-        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}`})
+        if (response.ok) {
+          setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+        } else {
+          alert(data.error || "An error occurred while generating the image.");
+        }
       } catch (error) {
-        alert(error);
+        alert(error.message);
       } finally {
         setGeneratingImage(false);
       }
     } else {
-      alert("Please provide a prompt")
+      alert("Please provide a prompt");
     }
   };
 
-  const handleSubmit = () => {
-
-  };
+  const handleSubmit = () => {};
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -55,7 +60,7 @@ const CreateImage = () => {
 
   const handleSurpriseMe = () => {
     const randomPrompt = getRandomPrompts(form.prompt);
-    setForm({ ...form, prompt: randomPrompt })
+    setForm({ ...form, prompt: randomPrompt });
   };
 
   return (
@@ -78,16 +83,19 @@ const CreateImage = () => {
             value={form.name}
             handleChange={handleChange}
           />
-          <FormField
-            labelName="Prompt"
-            type="text"
-            name="prompt"
-            placeholder="A dragon resting on a mountain peak under a starry sky"
-            value={form.prompt}
-            handleChange={handleChange}
-            isSurpriseMe
-            handleSurpriseMe={handleSurpriseMe}
-          />
+          <div>
+            <FormField
+              labelName="Prompt"
+              type="text"
+              name="prompt"
+              placeholder="A dragon resting on a mountain peak under a starry sky"
+              value={form.prompt}
+              handleChange={handleChange}
+              isSurpriseMe
+              handleSurpriseMe={handleSurpriseMe}
+            />
+            <p className="text-xs mt-2 ml-1 text-gray-600">{form.prompt.length} / 1000 characters</p>
+          </div>
 
           <div className="realative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-bl500 w-64 p-3 h-64 flex justify-center items-center">
             {form.photo ? (
@@ -123,13 +131,16 @@ const CreateImage = () => {
         </div>
 
         <div className="mt-10">
-            <p className="mt-2 text-[#666e75] text-[14px]">Once you have generated the image you want, you can share it with others in the community</p>
-            <button
-                type="submit"
-                className="mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-            >
-                {loading ? "Sharing..." : "Share with the community"}
-            </button>
+          <p className="mt-2 text-[#666e75] text-[14px]">
+            Once you have generated the image you want, you can share it with
+            others in the community
+          </p>
+          <button
+            type="submit"
+            className="mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            {loading ? "Sharing..." : "Share with the community"}
+          </button>
         </div>
       </form>
     </section>
