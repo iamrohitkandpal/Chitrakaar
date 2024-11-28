@@ -18,27 +18,24 @@ const CreateImage = () => {
 
   const generateImage = async () => {
     if (form.prompt) {
-      if (form.prompt.length > 1000) {
-        alert(
-          "Prompt is too long. Please shorten it to less than 1000 characters."
-        );
-        return;
-      }
-
       try {
         setGeneratingImage(true);
-        const response = await fetch("http://localhost:8080/api/v1/generation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt: form.prompt }),
-        });
-        
+
+        const response = await fetch(
+          "http://localhost:8080/api/v1/generation",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ prompt: form.prompt }),
+          }
+        );
 
         const data = await response.json();
+
         if (response.ok) {
-          setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+          setForm({ ...form, photo: data.photo }); // Use Base64 image
         } else {
           alert(data.error || "An error occurred while generating the image.");
         }
@@ -94,10 +91,12 @@ const CreateImage = () => {
               isSurpriseMe
               handleSurpriseMe={handleSurpriseMe}
             />
-            <p className="text-xs mt-2 ml-1 text-gray-600">{form.prompt.length} / 1000 characters</p>
+            <p className="text-xs mt-2 ml-1 text-gray-600">
+              {form.prompt.length} / 1000 characters
+            </p>
           </div>
 
-          <div className="realative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-bl500 w-64 p-3 h-64 flex justify-center items-center">
+          <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-bl500 w-64 p-3 h-64 flex justify-center items-center">
             {form.photo ? (
               <img
                 src={form.photo}
@@ -106,9 +105,9 @@ const CreateImage = () => {
               />
             ) : (
               <img
-                src={preview}
-                alt="preview"
-                className="w-9/12 h-9/12 object-contain opacity-40"
+                src={form.photo || preview}
+                alt={form.prompt || "Preview"}
+                className="w-full h-full object-contain"
               />
             )}
 
