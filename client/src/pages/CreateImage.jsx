@@ -94,7 +94,7 @@ const CreateImage = () => {
         <h1 className="font-extrabold text-[#222328] text-[32px]">Generate</h1>
         <p className="mt-2 text-[#666e75] text-[14px] max-w-[500px]">
           Generate imaginative & visually stunning images created by using
-          DALL-E AI and share them with the community
+          Stable Diffusion AI Model and share them with the community
         </p>
       </div>
 
