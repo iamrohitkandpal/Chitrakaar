@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { preview } from "../assets";
 import { getRandomPrompts } from "../utils";
 import { Loader, FormField } from "../components";
-Loader;
 
 const CreateImage = () => {
   const navigate = useNavigate();
@@ -49,7 +48,36 @@ const CreateImage = () => {
     }
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (form.prompt && form.photo) {
+      setLoading(true);
+
+      try {
+        const response = await fetch("http://localhost:8080/api/v1/image/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+
+        if (response.ok) {
+          await response.json();
+          navigate("/"); // Navigate to home page on success
+        } else {
+          alert("Failed to share the image. Please try again.");
+        }
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      alert("Please fill the form correctly.");
+    }
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
