@@ -66,21 +66,38 @@ router.route("/").post(async (req, res) => {
     }
 
     // Hugging Face API URL and Token
-    const HF_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large";
+    const HF_API_URL = "https://api-inference.huggingface.co/models/stable-diffusion-v1-5/stable-diffusion-v1-5";
     const HF_API_TOKEN = process.env.HUGGING_FACE_TOKEN;
+
+    if (!HF_API_TOKEN) {
+      return res.status(500).json({ error: "Server misconfiguration: HUGGING_FACE_TOKEN is not set" });
+    }
 
     // Send the request to Hugging Face API
     const response = await fetch(HF_API_URL, {
       headers: {
         Authorization: `Bearer ${HF_API_TOKEN}`,
         "Content-Type": "application/json",
+        Accept: "image/png",
       },
       method: "POST",
       body: JSON.stringify({ inputs: prompt }),
     });
 
+    // If the model is loading or returns JSON error, surface that instead of pretending it's an image
+    const contentType = response.headers.get("content-type") || "";
     if (!response.ok) {
-      throw new Error(`API call failed with status ${response.status}`);
+      let details = undefined;
+      if (contentType.includes("application/json")) {
+        try { details = await response.json(); } catch (_) {}
+      }
+      const message = `Image generation failed with status ${response.status}`;
+      return res.status(502).json({ error: message, details });
+    }
+
+    if (contentType.includes("application/json")) {
+      const details = await response.json();
+      return res.status(503).json({ error: "Model not ready or returned JSON response", details });
     }
 
     // Convert response to Base64 format for frontend usage
@@ -90,10 +107,9 @@ router.route("/").post(async (req, res) => {
 
     res.status(200).json({ photo: `data:image/png;base64,${imgBase64}` });
   } catch (error) {
-    console.error("Error generating image:", error.message);
+    console.error("Error generating image:", error);
     res.status(500).json({ error: "Failed to generate image" });
   }
 });
 
 export default router;
-
