@@ -1,8 +1,57 @@
-# React + Vite
+# 🎨 Chitrakaar Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> React frontend for the Chitrakaar AI art generation platform
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint code
+npm run lint
+```
+
+## 🛠️ Built With
+
+- **React 18** - UI framework with hooks and modern patterns
+- **Vite** - Lightning fast build tool with HMR
+- **Tailwind CSS** - Utility-first CSS framework with dark mode
+- **React Router DOM** - Client-side routing
+- **Context API** - Theme and state management
+
+## 📁 Project Structure
+
+```
+src/
+├── 📁 assets/           # Static assets (images, icons)
+├── 📁 components/       # Reusable UI components
+├── 📁 context/          # React Context providers
+├── 📁 pages/            # Route components
+├── 📁 utils/            # Helper functions
+├── App.jsx              # Main application component
+├── config.js            # App configuration
+└── main.jsx             # Application entry point
+```
+
+## 🌟 Features
+
+- ⚡ **Vite** for fast development and building
+- 🌙 **Dark/Light Theme** with system preference detection
+- 📱 **Fully Responsive** design
+- 🎨 **Beautiful UI** with Tailwind CSS animations
+- 🔄 **Real-time Updates** and feedback
+- ♿ **Accessible** components with proper ARIA labels
+
+## 📖 More Info
+
+See the main [README.md](../README.md) for complete project documentation.
