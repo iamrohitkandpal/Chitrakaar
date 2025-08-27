@@ -6,7 +6,7 @@ const Loader = () => (
       <div className="w-12 h-12 border-4 border-gray-200 dark:border-gray-700 rounded-full animate-pulse"></div>
       <div className="absolute top-0 left-0 w-12 h-12 border-4 border-primary-600 dark:border-primary-400 border-t-transparent rounded-full animate-spin"></div>
     </div>
-    <div className="text-sm font-medium text-gray-600 dark:text-gray-300 animate-pulse">
+    <div className="text-sm font-medium text-gray-600 dark:text-gray-200 animate-pulse">
       Creating magic...
     </div>
     <div className="flex space-x-1">

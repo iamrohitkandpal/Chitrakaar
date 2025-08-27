@@ -23,7 +23,7 @@ const RenderCards = ({ data, title }) => {
         </svg>
       </div>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
-      <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-md">
+      <p className="text-sm text-gray-600 dark:text-gray-300 text-center max-w-md">
         {title.includes('Search') ? 'Try different keywords or browse all images below.' : 'Be the first to share your AI-generated masterpiece with the community!'}
       </p>
     </div>
@@ -92,18 +92,18 @@ const Home = () => {
         <h1 className="font-bold text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-100 dark:via-white dark:to-gray-100 bg-clip-text text-transparent leading-tight mb-4">
           Community Showcase
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg text-gray-600 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed">
           Discover amazing AI-generated artwork from our creative community. 
           Every image tells a unique story through the power of artificial intelligence.
         </p>
         
         {/* Stats */}
         <div className="flex justify-center items-center gap-8 mt-8 text-sm">
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
             <span>{resultsCount} {resultsCount === 1 ? 'artwork' : 'artworks'}</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span>Live updates</span>
           </div>
@@ -139,7 +139,7 @@ const Home = () => {
                     <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
                       Search Results for "{searchText}"
                     </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                       Found {resultsCount} {resultsCount === 1 ? 'result' : 'results'}
                     </p>
                   </div>

@@ -12,18 +12,18 @@ const ThemeToggle = () => {
     >
       <span
         className={`inline-block w-5 h-5 transition-transform duration-200 transform bg-white dark:bg-gray-200 rounded-full shadow-md ${
-          isDark ? 'translate-x-6' : 'translate-x-0'
+          isDark ? 'translate-x-3' : '-translate-x-3'
         }`}
       />
       
       {/* Sun Icon */}
       <span
-        className={`absolute left-1 top-1 transition-opacity duration-200 ${
+        className={`absolute left-1.5 transition-opacity duration-200 ${
           isDark ? 'opacity-0' : 'opacity-100'
         }`}
       >
         <svg
-          className="w-3 h-3 text-yellow-500"
+          className="w-3 h-3 text-yellow-600"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -37,7 +37,7 @@ const ThemeToggle = () => {
 
       {/* Moon Icon */}
       <span
-        className={`absolute right-1 top-1 transition-opacity duration-200 ${
+        className={`absolute right-1.5 transition-opacity duration-200 ${
           isDark ? 'opacity-100' : 'opacity-0'
         }`}
       >
