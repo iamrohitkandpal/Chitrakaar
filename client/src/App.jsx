@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 
-import { Home, CreateImage } from "./pages";
+import { Home, CreateImage, PrivacyPolicy, TermsOfService } from "./pages";
 import { logopi } from "./assets";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ThemeToggle";
@@ -36,6 +36,8 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/create-image" element={<CreateImage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
             </Routes>
           </main>
           <Footer />
