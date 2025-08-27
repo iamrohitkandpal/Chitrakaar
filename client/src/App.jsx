@@ -5,6 +5,7 @@ import { Home, CreateImage } from "./pages";
 import { logopi } from "./assets";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ThemeToggle";
+import { Footer } from "./components";
 
 const App = () => {
   return (
@@ -16,7 +17,7 @@ const App = () => {
               <img 
                 src={logopi} 
                 alt="Chitrakaar logo" 
-                className="w-44 object-contain transition-transform duration-300 group-hover:scale-105"
+                className="w-44 object-contain transition-all duration-300 group-hover:scale-105 logo-invert"
               />
             </Link>
 
@@ -37,6 +38,7 @@ const App = () => {
               <Route path="/create-image" element={<CreateImage />} />
             </Routes>
           </main>
+          <Footer />
         </BrowserRouter>
       </div>
     </ThemeProvider>

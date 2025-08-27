@@ -1,50 +1,3 @@
-// import express from "express";
-// import * as dotenv from "dotenv";
-// import OpenAI from "openai";
-
-// const client = new OpenAI({
-//   apiKey: process.env["OPENAI_API_KEY"],
-// });
-
-// dotenv.config();
-
-// const router = express.Router();
-
-// router.route("/").get((req, res) => {
-//   res.send("Hello from DALL-E");
-// });
-
-// router.route("/").post(async (req, res) => {
-//   try {
-//     console.log(req.body);
-    
-//     const { prompt } = req.body;
-
-//     // Check if the prompt exceeds the character limit
-//     if (prompt.length > 1000) {
-//       return res.status(400).json({ error: "Prompt exceeds the maximum allowed length of 1000 characters." });
-//     }
-
-//     const aiResponse = await client.images.generate({
-//       model: "dall-e-3",
-//       prompt,
-//       n: 1,
-//       size: "1024x1024",
-//       response_format: "b64_json",
-//     });
-
-//     const image = aiResponse.data.data[0].image;
-//     res.status(200).json({ photo: image });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error: error.message, details: error.response?.data });
-
-//   }
-// });
-
-
-// export default router;
-
 import express from "express";
 import * as dotenv from "dotenv";
 import fetch from "node-fetch";
@@ -52,10 +5,6 @@ import fetch from "node-fetch";
 dotenv.config();
 
 const router = express.Router();
-
-router.route("/").get((req, res) => {
-  res.send("Hello from Stable Diffusion!");
-});
 
 router.route("/").post(async (req, res) => {
   try {
@@ -66,49 +15,71 @@ router.route("/").post(async (req, res) => {
     }
 
     // Hugging Face API URL and Token
-    const HF_API_URL = "https://api-inference.huggingface.co/models/stable-diffusion-v1-5/stable-diffusion-v1-5";
+    const HF_API_URL =
+      "https://router.huggingface.co/nebius/v1/images/generations";
     const HF_API_TOKEN = process.env.HUGGING_FACE_TOKEN;
 
-    if (!HF_API_TOKEN) {
-      return res.status(500).json({ error: "Server misconfiguration: HUGGING_FACE_TOKEN is not set" });
-    }
+    console.log("Making request to Hugging Face Nebius Inference Provider...");
+    console.log("URL:", HF_API_URL);
+    console.log("Token:", `${HF_API_TOKEN.slice(0, 8)}...`);
 
     // Send the request to Hugging Face API
     const response = await fetch(HF_API_URL, {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${HF_API_TOKEN}`,
         "Content-Type": "application/json",
-        Accept: "image/png",
       },
-      method: "POST",
-      body: JSON.stringify({ inputs: prompt }),
+      body: JSON.stringify({
+        model: "stability/stable-diffusion-xl-base-1.0",
+        prompt: prompt,
+        response_format: "b64_json",
+      }),
     });
 
+    console.log("Response Status:", response.status);
+
     // If the model is loading or returns JSON error, surface that instead of pretending it's an image
-    const contentType = response.headers.get("content-type") || "";
+
     if (!response.ok) {
-      let details = undefined;
-      if (contentType.includes("application/json")) {
-        try { details = await response.json(); } catch (_) {}
+      let errorData;
+
+      try {
+        errorData = await response.json();
+      } catch {
+        const text = await response.text();
+        return res.status(502).json({
+          error: "Hugging Face API error (non-JSON)",
+          details: text,
+        });
       }
-      const message = `Image generation failed with status ${response.status}`;
-      return res.status(502).json({ error: message, details });
+
+      return res.status(response.status).json({
+        error: "Hugging Face Provider error",
+        details: errorData,
+      });
     }
 
-    if (contentType.includes("application/json")) {
-      const details = await response.json();
-      return res.status(503).json({ error: "Model not ready or returned JSON response", details });
+    const data = await response.json();
+
+    if (!data.data || !data.data[0]?.b64_json) {
+      return res.status(502).json({
+        error: "Unexpected response format from provider",
+        details: data,
+      });
     }
 
     // Convert response to Base64 format for frontend usage
-    const blob = await response.blob();
-    const buffer = Buffer.from(await blob.arrayBuffer());
-    const imgBase64 = buffer.toString("base64");
-
-    res.status(200).json({ photo: `data:image/png;base64,${imgBase64}` });
+    const base64Image = data.data[0].b64_json;
+    res.status(200).json({
+      photo: `data:image/png;base64,${base64Image}`,
+    });
   } catch (error) {
     console.error("Error generating image:", error);
-    res.status(500).json({ error: "Failed to generate image" });
+    res.status(500).json({
+      error: "Internal server error while generation image",
+      details: error.message,
+    });
   }
 });
 
