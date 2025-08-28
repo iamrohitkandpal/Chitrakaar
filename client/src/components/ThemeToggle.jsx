@@ -42,7 +42,7 @@ const ThemeToggle = () => {
         }`}
       >
         <svg
-          className="w-3 h-3 text-gray-300"
+          className="w-3 h-3 text-gray-500"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
